@@ -1,8 +1,14 @@
-const form = document.querySelector('#light-form');
+const lightForm = document.querySelector('#light-form');
+const lightRefresh = document.querySelector('#light-refresh');
 
 function toggleLight() {
     ipcRenderer.send('light:toggle');
 }
 
+function refreshLight() {
+    ipcRenderer.send('light:refresh');
+}
 
-form.addEventListener('submit', toggleLight);
+
+lightForm.addEventListener('submit', toggleLight);
+lightRefresh.addEventListener('submit', refreshLight);
