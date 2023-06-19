@@ -34,10 +34,12 @@ function createMainWindow() {
     mainWindow.loadFile(path.join(__dirname, './renderer/index.html'))
 }
 
+
 //Build new httpsClient
 const httpsAgent = new https.Agent({
     rejectUnauthorized: false,
 });
+
 
 // Respond to light request
 ipcMain.on('light:toggle', (e) => {
@@ -87,6 +89,7 @@ function toggleLight () {
     }
 
     const HEADER = {
+
             'hue-application-key' : `${HUE_KEY}`,
             'Content-Type' : 'text/plain'
     }
@@ -94,10 +97,7 @@ function toggleLight () {
     const URL = `https://${HUE_IP}/clip/v2/resource/light/cb4df8c2-9653-4b9d-b124-6622b0ebcb51`
 
     axios
-        .put(URL, DATA, {
-            headers: HEADER,
-            httpsAgent: httpsAgent
-        })
+        .post(`https://${HUE_IP}/clip/v2/resource/light/cb4df8c2-9653-4b9d-b124-6622b0ebcb51`, DATA, HEADER, { httpsAgent })
         .then((response) => {
             if (response.status === 201) {
                 console.log('Req body:', response.data);
@@ -107,7 +107,7 @@ function toggleLight () {
         .catch((e) => {
             console.error(e);
         })
-}
+    }
 
 //App is ready
 
