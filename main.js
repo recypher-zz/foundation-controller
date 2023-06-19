@@ -1,6 +1,12 @@
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
-const http = require('http');
+const axios = require('axios');
 const path = require('path');
+const https = require('https');
+
+require('dotenv').config();
+
+let HUE_KEY = process.env.HUE_KEY;
+let HUE_IP = process.env.HUE_IP;
 
 let mainWindow;
 
@@ -33,10 +39,34 @@ ipcMain.on('light:toggle', (e) => {
     toggleLight();
 });
 
-function toggleLight () {
-    var request = http.request();
+//Build light toggle info #TODO: MOVE TO ENV FOR GIT PUSH
+const httpsAgent = new https.Agent({
+    rejectUnauthorized: false,
+});
 
-    request.setHeader(['hue-application-key', '2K2USkwaF7zMvWlD0XhHkkL4KhLwMLe2yz9hTSSP'])
+function toggleLight () {
+    console.log('Toggling lights...');
+    const DATA = {
+        "on": {
+            "on":true
+        }
+    }
+
+    const HEADER = {
+        headers: {'hue-application-key' : `${HUE_KEY}`}
+    }
+
+    axios
+        .post(`https://${HUE_IP}/clip/v2/resource/light/cb4df8c2-9653-4b9d-b124-6622b0ebcb51`, DATA, HEADER, { httpsAgent })
+        .then((response) => {
+            if (response.status === 201) {
+                console.log('Req body:', response.data);
+                console.log('Req header : ', response.headers);
+            }
+        })
+        .catch((e) => {
+            console.error(e);
+        })
 }
 
 //App is ready
