@@ -67,8 +67,14 @@ function refreshLight() {
             httpsAgent: agent
         })
         .then((response) => {
-            console.log(response.status);
-            console.log(response.data[{id_v1}]);
+            for (const item of response.data.data) {
+                for (const service of item.services) {
+                    if (service.rtype === "light"){
+                        const rid = service.rid;
+                        console.log(rid);
+                    }
+                }
+            }
         })
         .catch((e) => {
             console.error(e);
