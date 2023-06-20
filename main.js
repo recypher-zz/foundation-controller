@@ -36,7 +36,7 @@ function createMainWindow() {
 
 
 //Build new httpsClient
-const httpsAgent = new https.Agent({
+const agent = new https.Agent({
     rejectUnauthorized: false,
 });
 
@@ -53,25 +53,22 @@ ipcMain.on('light:refresh', (e) => {
 //Build light search and refresh
 
 function refreshLight() {
+    console.log('Searching for lights');
     const HEADER = {
         'hue-application-key' : `${HUE_KEY}`,
         'Content-type' : 'text/plain'
     }
 
-    const DATA = '';
-
     const URL = `https://${HUE_IP}/clip/v2/resource/device`;
 
     axios
-        .get(URL, DATA, {
+        .get(URL, {
             headers: HEADER,
-            httpsAgent: httpsAgent
+            httpsAgent: agent
         })
         .then((response) => {
-            if (response.status === 201) {
-                console.log('Req body:', response.data);
-                console.log('Req header : ', response.headers);
-            }
+            console.log(response.status);
+            console.log(response.data[{id_v1}]);
         })
         .catch((e) => {
             console.error(e);
@@ -97,7 +94,10 @@ function toggleLight () {
     const URL = `https://${HUE_IP}/clip/v2/resource/light/cb4df8c2-9653-4b9d-b124-6622b0ebcb51`
 
     axios
-        .post(`https://${HUE_IP}/clip/v2/resource/light/cb4df8c2-9653-4b9d-b124-6622b0ebcb51`, DATA, HEADER, { httpsAgent })
+        .put(`https://${HUE_IP}/clip/v2/resource/light/cb4df8c2-9653-4b9d-b124-6622b0ebcb51`, DATA, {
+            headers: HEADER,
+            httpsAgent: agent
+        })
         .then((response) => {
             if (response.status === 201) {
                 console.log('Req body:', response.data);
