@@ -18,4 +18,4 @@ Currently this app only does very basic and rudementary interactions with my Hue
 
 - [ ] Work with Wyze system to allow for live time camera feeds within the application itself.
 
-==A lot of this is new technology to me, so the code is going to be very very basic in the beginning until I get the hang of it and get a better idea of how to handle things==
+`*A lot of this is new technology to me, so the code is going to be very very basic in the beginning until I get the hang of it and get a better idea of how to handle things.*`
